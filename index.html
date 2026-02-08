@@ -1,0 +1,1617 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>SIMER - SUI IURIS LAW OFFICE</title>
+
+    <!-- PWA Settings -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="apple-mobile-web-app-title" content="SIMER" />
+
+    <link
+      rel="apple-touch-icon"
+      href="https://img.icons8.com/color/512/law.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      href="https://img.icons8.com/color/512/law.png"
+    />
+
+    <!-- Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@18/umd/react.development.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"
+    ></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage-compat.js"></script>
+
+    <!-- UI Tools -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap");
+
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8fafc;
+        color: #334155;
+        letter-spacing: -0.01em;
+        -webkit-tap-highlight-color: transparent;
+        padding-top: env(safe-area-inset-top);
+      }
+
+      .fade-in {
+        animation: fadeIn 0.3s ease-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Animations for Icons */
+      @keyframes float {
+        0% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-3px);
+        }
+        100% {
+          transform: translateY(0px);
+        }
+      }
+      .animate-float {
+        animation: float 3s ease-in-out infinite;
+      }
+
+      .bg-silo-purple {
+        background-color: #6b4379;
+      }
+      .text-silo-purple {
+        color: #6b4379;
+      }
+
+      .input-std {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 13px;
+        outline: none;
+        transition: 0.2s;
+        background-color: #fff;
+      }
+      .input-std:focus {
+        border-color: #6b4379;
+        box-shadow: 0 0 0 4px rgba(107, 67, 121, 0.05);
+      }
+
+      /* Rich Text Editor Styling */
+      .editor-box {
+        min-height: 120px;
+        padding: 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 0 0 10px 10px;
+        background: white;
+        font-size: 13px;
+        outline: none;
+        line-height: 1.6;
+      }
+      .editor-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        padding: 8px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-bottom: none;
+        border-radius: 10px 10px 0 0;
+      }
+      .toolbar-btn {
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #64748b;
+        transition: 0.2s;
+        border: 1px solid transparent;
+      }
+      .toolbar-btn:hover {
+        background: #e2e8f0;
+        color: #334155;
+      }
+
+      /* Timeline Content Styling */
+      .report-content-cell {
+        font-size: 13px;
+        line-height: 1.8;
+        color: #475569;
+        text-align: justify;
+      }
+      .report-content-cell p {
+        margin-bottom: 0.8rem;
+      }
+      .report-content-cell b,
+      .report-content-cell strong {
+        font-weight: 700;
+        color: #1e293b;
+      }
+
+      .table-custom th {
+        background-color: #f8fafc;
+        color: #94a3b8;
+        font-weight: 600;
+        font-size: 0.6rem;
+        text-transform: uppercase;
+        padding: 14px 10px;
+        text-align: left;
+        border-bottom: 1px solid #f1f5f9;
+        letter-spacing: 0.05em;
+      }
+      .table-custom td {
+        padding: 14px 10px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.8rem;
+        vertical-align: top;
+      }
+
+      .chat-container {
+        scroll-behavior: smooth;
+        overflow-y: auto;
+        height: 380px;
+        padding: 10px;
+      }
+      .btn-tab {
+        flex: 1;
+        padding: 14px 5px;
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        transition: 0.2s;
+        border-bottom: 2px solid transparent;
+        color: #94a3b8;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+      .btn-tab-active {
+        color: #6b4379;
+        border-bottom-color: #6b4379;
+        background-color: #faf5ff;
+      }
+
+      .upload-progress {
+        height: 4px;
+        background: #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-top: 8px;
+      }
+      .upload-bar {
+        height: 100%;
+        background: #6b4379;
+        transition: width 0.3s;
+      }
+
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+      // =====================================================================
+      // 1. KONFIGURASI FIREBASE
+      // =====================================================================
+      const firebaseConfig = {
+        apiKey: "AIzaSyC_-yf8BW-VGbM8UoN8DNRVKlk1tN1HoUU",
+        authDomain: "silo-informasi-perkara-6f20d.firebaseapp.com",
+        projectId: "silo-informasi-perkara-6f20d",
+        storageBucket: "silo-informasi-perkara-6f20d.firebasestorage.app",
+        messagingSenderId: "482890293270",
+        appId: "1:482890293270:web:7a1f6300b491e937981537",
+        measurementId: "G-B3FQKSG5BH",
+      };
+
+      // --- DAFTAR ADMIN ---
+      const ADMIN_EMAILS = [
+        "admin@silolawyer.com",
+        "partner@silolawyer.com",
+        "staf@silolawyer.com",
+        "litigasi@silolawyer.com",
+        "riset@silolawyer.com",
+      ];
+
+      const ADMIN_WA_NUMBER = "6282328431512";
+      let GEMINI_API_KEY = "AIzaSyCzz1pDqrMy6QGn7KSWHjQwt1AZjiaIuQg";
+
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      const auth = firebase.auth();
+      const storage = firebase.storage();
+
+      const { useState, useEffect, useRef } = React;
+
+      // --- KAMUS MULTI-BAHASA ---
+      const translations = {
+        id: {
+          portal: "PORTAL SISTEM INFORMASI MANAGEMEN PERKARA (SIMER)",
+          office: "SUI IURIS LAW OFFICE",
+          user_label: "Email atau Nomor HP",
+          pass_label: "Kata Sandi",
+          login_btn: "MASUK APLIKASI",
+          back_list: "Kembali ke Daftar",
+          logout: "Keluar",
+          tab_perkara: "LAPORAN",
+          tab_keuangan: "DANA",
+          tab_dokumen: "BERKAS",
+          tab_diskusi: "DISKUSI",
+          act_t: "Judul Kegiatan",
+          post: "Posting Update",
+          ai_sum: "Ringkasan AI ✨",
+          save: "Simpan",
+          add_photo: "Lampirkan Foto (Maks 150KB)",
+          copy_id: "SALIN ID SYNC 📋",
+          add_case: "+ PERKARA",
+          wa_sync: "HUBUNGI WA 🟢",
+          ai_rew: "Perhalus AI ✨",
+          switch_case: "Pindah Perkara ⬇️",
+          edit: "Edit",
+          delete: "Hapus",
+          cancel: "Batal",
+          upload_file: "FILE",
+          upload_link: "LINK",
+          uploading: "Mengunggah...",
+          prompt_summary:
+            "Ringkas riwayat perkara ini dlm poin-poin Bahasa Indonesia:",
+          prompt_rewrite:
+            "Perhalus pesan singkat pengacara ini jadi bahasa hukum profesional Indonesia yang formal:",
+          status_verified: "Terverifikasi",
+          status_pending: "Menunggu",
+          date_label: "Tanggal",
+          type_label: "Jenis",
+          cat_label: "Kategori",
+          trans_out: "🔴 Keluar",
+          trans_in: "🟢 Masuk",
+          amt_placeholder: "Nominal Rp",
+          desc_placeholder: "Keterangan rincian...",
+          date_input_label: "Tanggal",
+          time_input_label: "Jam",
+          act_input_label: "Judul Kegiatan",
+        },
+        en: {
+          portal: "CASE MANAGEMENT INFORMATION SYSTEM PORTAL (SIMER)",
+          office: "SUI IURIS LAW OFFICE",
+          user_label: "Email or Phone",
+          pass_label: "Password",
+          login_btn: "SIGN IN",
+          back_list: "Back to List",
+          logout: "Logout",
+          tab_perkara: "REPORTS",
+          tab_keuangan: "FINANCE",
+          tab_dokumen: "DOCUMENTS",
+          tab_diskusi: "CHAT",
+          act_t: "Activity Title",
+          post: "Post Update",
+          ai_sum: "AI Summary ✨",
+          save: "Save",
+          add_photo: "Attach Photo (Max 150KB)",
+          copy_id: "COPY SYNC ID 📋",
+          add_case: "+ CASE",
+          wa_sync: "WA CONTACT 🟢",
+          ai_rew: "AI Refine ✨",
+          switch_case: "Switch Case ⬇️",
+          edit: "Edit",
+          delete: "Delete",
+          cancel: "Cancel",
+          upload_file: "FILE",
+          upload_link: "LINK",
+          uploading: "Uploading...",
+          prompt_summary:
+            "Summarize this case history in professional English points:",
+          prompt_rewrite:
+            "Refine this brief lawyer's message into formal professional legal English:",
+          status_verified: "Verified",
+          status_pending: "Pending",
+          date_label: "Date",
+          type_label: "Type",
+          cat_label: "Category",
+          trans_out: "🔴 Expense",
+          trans_in: "🟢 Deposit",
+          amt_placeholder: "Amount",
+          desc_placeholder: "Details...",
+          date_input_label: "Date",
+          time_input_label: "Time",
+          act_input_label: "Activity Title",
+        },
+      };
+
+      async function callGeminiAI(promptText) {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${GEMINI_API_KEY}`;
+        try {
+          const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{ parts: [{ text: promptText }] }],
+            }),
+          });
+          const d = await res.json();
+          return d.candidates?.[0]?.content?.parts?.[0]?.text || "AI Error";
+        } catch (e) {
+          return "Koneksi AI Gagal.";
+        }
+      }
+
+      function SimerApp() {
+        const [lang, setLang] = useState("id");
+        const t = (key) => translations[lang][key] || key;
+        const [user, setUser] = useState(null);
+        const [view, setView] = useState("login");
+        const [clients, setClients] = useState([]);
+        const [loading, setLoading] = useState(true);
+        const [selectedClientId, setSelectedClientId] = useState(null);
+        const [myCases, setMyCases] = useState([]);
+
+        useEffect(() => {
+          const unsub = auth.onAuthStateChanged(async (u) => {
+            if (u) {
+              const isAdmin = ADMIN_EMAILS.includes(u.email);
+              setUser({ role: isAdmin ? "admin" : "client", email: u.email });
+
+              const q = await db
+                .collection("clients")
+                .where("email", "==", u.email)
+                .get();
+              const cases = q.docs.map((d) => ({ id: d.id, ...d.data() }));
+              setMyCases(cases);
+
+              if (isAdmin) setView("admin-dashboard");
+              else {
+                if (cases.length > 0) setSelectedClientId(cases[0].id);
+                setView("client-dashboard");
+              }
+            } else {
+              setView("login");
+              setUser(null);
+            }
+            setLoading(false);
+          });
+          return () => unsub();
+        }, []);
+
+        useEffect(() => {
+          if (!user) return;
+          db.collection("clients")
+            .orderBy("name")
+            .onSnapshot((s) =>
+              setClients(s.docs.map((d) => ({ id: d.id, ...d.data() })))
+            );
+        }, [user]);
+
+        const handleAddCase = (existing = null) => {
+          const n = existing ? existing.name : prompt("Nama Klien:");
+          const e = existing ? existing.email : prompt("Email Login:");
+          const p = existing ? existing.phone : prompt("No WhatsApp:");
+          const ct = prompt("Judul Perkara Baru:");
+          if (n && e && ct)
+            db.collection("clients").add({
+              name: n,
+              email: e,
+              phone: p || "",
+              caseTitle: ct,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+        };
+
+        if (loading)
+          return (
+            <div className="h-screen flex items-center justify-center bg-slate-900 text-slate-500 text-xs tracking-widest uppercase italic font-sans">
+              SIMER Connecting...
+            </div>
+          );
+
+        if (view === "login")
+          return (
+            <div className="min-h-screen bg-[#0f172a] flex items-center justify-center p-4">
+              <div className="bg-white p-8 md:p-10 rounded-[2.5rem] w-full max-w-sm text-center shadow-2xl relative border-t-4 border-silo-purple fade-in font-sans">
+                <div className="absolute top-4 right-6 flex bg-slate-50 rounded p-0.5 text-[9px] font-bold border">
+                  <button
+                    onClick={() => setLang("id")}
+                    className={`px-2 py-1 rounded ${
+                      lang === "id"
+                        ? "bg-silo-purple text-white"
+                        : "text-slate-400"
+                    }`}
+                  >
+                    ID
+                  </button>
+                  <button
+                    onClick={() => setLang("en")}
+                    className={`px-2 py-1 rounded ${
+                      lang === "en"
+                        ? "bg-silo-purple text-white"
+                        : "text-slate-400"
+                    }`}
+                  >
+                    EN
+                  </button>
+                </div>
+                <div className="mb-6 flex justify-center text-silo-purple mt-4">
+                  <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center border text-3xl">
+                    ⚖️
+                  </div>
+                </div>
+                <h1 className="text-sm font-black mb-1 text-slate-800 tracking-tight uppercase leading-snug px-4 md:text-base">
+                  {t("portal")}
+                </h1>
+                <p className="text-[10px] text-slate-400 mb-8 font-semibold tracking-widest uppercase italic">
+                  {t("office")}
+                </p>
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    setLoading(true);
+                    try {
+                      await auth.signInWithEmailAndPassword(
+                        e.target.email.value,
+                        e.target.pass.value
+                      );
+                    } catch (err) {
+                      alert("Data tidak ditemukan.");
+                      setLoading(false);
+                    }
+                  }}
+                  className="space-y-4 text-left max-w-sm mx-auto"
+                >
+                  <input
+                    name="email"
+                    type="text"
+                    placeholder={t("user_label")}
+                    className="input-std border-slate-200"
+                    required
+                  />
+                  <div className="relative">
+                    <input
+                      id="passInput"
+                      name="pass"
+                      type="password"
+                      placeholder={t("pass_label")}
+                      className="input-std border-slate-200 pr-10"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const x = document.getElementById("passInput");
+                        x.type = x.type === "password" ? "text" : "password";
+                      }}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm"
+                    >
+                      👁️
+                    </button>
+                  </div>
+                  <button className="w-full bg-slate-900 text-white font-bold py-3.5 rounded-xl uppercase text-[11px] tracking-widest active:scale-95 transition shadow-lg shadow-slate-200">
+                    {t("login_btn")}
+                  </button>
+                </form>
+              </div>
+            </div>
+          );
+
+        return (
+          <div className="min-h-screen flex flex-col font-sans">
+            <header className="bg-slate-900 text-white px-4 h-16 flex items-center sticky top-0 z-[100] shadow-sm">
+              <div className="max-w-5xl mx-auto w-full flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  {user.role === "admin" && selectedClientId ? (
+                    <button
+                      onClick={() => setSelectedClientId(null)}
+                      className="text-amber-500 font-bold text-[11px] flex items-center gap-1 active:opacity-50 transition"
+                    >
+                      <span>⬅</span> {t("back_list")}
+                    </button>
+                  ) : (
+                    <div className="text-lg animate-float text-amber-500">
+                      ⚖️
+                    </div>
+                  )}
+                  <div>
+                    <h1 className="font-bold text-sm tracking-tight uppercase italic leading-none">
+                      SIMER
+                    </h1>
+                    <p className="text-[8px] text-slate-400 uppercase font-black tracking-widest mt-1">
+                      {t("office")}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="hidden sm:flex bg-slate-800 rounded p-0.5 text-[9px] font-bold border border-slate-700">
+                    <button
+                      onClick={() => setLang("id")}
+                      className={`px-2 py-1 rounded ${
+                        lang === "id"
+                          ? "bg-silo-purple text-white"
+                          : "text-slate-400"
+                      }`}
+                    >
+                      ID
+                    </button>
+                    <button
+                      onClick={() => setLang("en")}
+                      className={`px-2 py-1 rounded ${
+                        lang === "en"
+                          ? "bg-silo-purple text-white"
+                          : "text-slate-400"
+                      }`}
+                    >
+                      EN
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => auth.signOut()}
+                    className="text-[10px] font-bold border border-slate-700 px-3 py-1.5 rounded hover:bg-red-600 transition uppercase tracking-widest"
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            </header>
+
+            <main className="max-w-5xl mx-auto w-full p-3 md:p-6 fade-in">
+              {user.role === "admin" && !selectedClientId && (
+                <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                  <div className="p-4 border-b bg-slate-50 flex justify-between items-center">
+                    <div className="flex flex-col">
+                      <h2 className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">
+                        Registry Klien & Perkara
+                      </h2>
+                      <p className="text-[9px] font-black text-slate-800 italic uppercase">
+                        {t("office")}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleAddCase()}
+                      className="bg-slate-900 text-white px-3 py-1.5 rounded text-[10px] font-bold active:scale-95 shadow uppercase tracking-wider"
+                    >
+                      + NEW CLIENT
+                    </button>
+                  </div>
+                  <div className="divide-y divide-slate-50">
+                    {clients.map((c) => (
+                      <div
+                        key={c.id}
+                        className="p-4 flex justify-between items-center hover:bg-slate-50 transition group"
+                      >
+                        <div
+                          onClick={() => setSelectedClientId(c.id)}
+                          className="cursor-pointer flex-1"
+                        >
+                          <h3 className="font-bold text-slate-800 text-sm uppercase">
+                            {c.name}
+                          </h3>
+                          <p className="text-[10px] text-indigo-500 font-medium uppercase mt-0.5">
+                            {c.caseTitle}
+                          </p>
+                          <div className="mt-2 flex items-center gap-2">
+                            <code className="text-[9px] bg-slate-100 px-2 py-0.5 rounded text-slate-400 font-mono italic">
+                              ID SYNC: {c.id}
+                            </code>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigator.clipboard.writeText(c.id);
+                                alert(
+                                  "ID DISALIN! Tempelkan ID ini pada aplikasi SILO STRATEGY."
+                                );
+                              }}
+                              className="text-[8px] bg-indigo-50 text-indigo-600 font-black px-2 py-0.5 rounded border border-indigo-100 hover:bg-indigo-600 hover:text-white transition uppercase"
+                            >
+                              {t("copy_id")}
+                            </button>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => handleAddCase(c)}
+                            className="text-[9px] bg-slate-100 text-slate-500 font-bold px-2 py-1.5 rounded hover:bg-silo-purple hover:text-white transition uppercase"
+                          >
+                            {t("add_case")}
+                          </button>
+                          <button
+                            onClick={() => setSelectedClientId(c.id)}
+                            className="bg-slate-900 text-white px-4 py-2 rounded-lg text-[10px] font-bold active:scale-95 transition shadow uppercase"
+                          >
+                            Open
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedClientId && (
+                <DashboardTabs
+                  clientId={selectedClientId}
+                  userRole={user.role}
+                  t={t}
+                  lang={lang}
+                  clientName={
+                    clients.find((c) => c.id === selectedClientId)?.name ||
+                    myCases.find((c) => c.id === selectedClientId)?.name
+                  }
+                  clientPhone={
+                    clients.find((c) => c.id === selectedClientId)?.phone ||
+                    myCases.find((c) => c.id === selectedClientId)?.phone
+                  }
+                  myCases={myCases}
+                  onSwitch={setSelectedClientId}
+                />
+              )}
+            </main>
+          </div>
+        );
+      }
+
+      function DashboardTabs({
+        clientId,
+        userRole,
+        t,
+        lang,
+        clientName,
+        clientPhone,
+        myCases,
+        onSwitch,
+      }) {
+        const [tab, setTab] = useState("perkara");
+        const [data, setData] = useState({
+          logs: [],
+          finance: [],
+          docs: [],
+          notes: [],
+        });
+        const [aiLoading, setAiLoading] = useState(false);
+        const [aiSummary, setAiSummary] = useState(null);
+        const [editingId, setEditingId] = useState(null);
+        const [uploading, setUploading] = useState(false);
+        const [uploadType, setUploadType] = useState("file");
+        const [progress, setProgress] = useState(0);
+        const editorRef = useRef(null);
+        const chatEnd = useRef(null);
+
+        useEffect(() => {
+          if (!clientId) return;
+          const unsubLogs = db.collection("case_logs").onSnapshot((s) => {
+            const all = s.docs.map((d) => ({ id: d.id, ...d.data() }));
+            setData((prev) => ({
+              ...prev,
+              logs: all
+                .filter((l) => l.clientId === clientId)
+                .sort((a, b) => b.date.localeCompare(a.date)),
+            }));
+          });
+          const unsubFinance = db.collection("finance_logs").onSnapshot((s) => {
+            const all = s.docs.map((d) => ({ id: d.id, ...d.data() }));
+            setData((prev) => ({
+              ...prev,
+              finance: all
+                .filter((l) => l.clientId === clientId)
+                .sort((a, b) => b.date.localeCompare(a.date)),
+            }));
+          });
+          const unsubDocs = db.collection("documents").onSnapshot((s) => {
+            const all = s.docs.map((d) => ({ id: d.id, ...d.data() }));
+            setData((prev) => ({
+              ...prev,
+              docs: all
+                .filter((l) => l.clientId === clientId)
+                .sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds),
+            }));
+          });
+          const unsubNotes = db.collection("notes").onSnapshot((s) => {
+            const all = s.docs.map((d) => ({ id: d.id, ...d.data() }));
+            setData((prev) => ({
+              ...prev,
+              notes: all
+                .filter((l) => l.clientId === clientId)
+                .sort((a, b) => a.createdAt?.seconds - b.createdAt?.seconds),
+            }));
+          });
+          return () => {
+            unsubLogs();
+            unsubFinance();
+            unsubDocs();
+            unsubNotes();
+          };
+        }, [clientId]);
+
+        useEffect(() => {
+          if (tab === "diskusi")
+            chatEnd.current?.scrollIntoView({ behavior: "smooth" });
+        }, [data.notes, tab]);
+
+        const executeCmd = (cmd, val = null) => {
+          document.execCommand(cmd, false, val);
+          if (editorRef.current) editorRef.current.focus();
+        };
+
+        const handleCasePost = async (e) => {
+          e.preventDefault();
+          const fd = new FormData(e.target);
+          const content = editorRef.current.innerHTML;
+          const file = e.target.photo.files[0];
+          let b64 = null;
+          if (file) {
+            if (file.size > 153600) return alert("MAKSIMAL 150KB!");
+            b64 = await new Promise((r) => {
+              const rd = new FileReader();
+              rd.onload = () => r(rd.result);
+              rd.readAsDataURL(file);
+            });
+          }
+
+          if (editingId) {
+            await db
+              .collection("case_logs")
+              .doc(editingId)
+              .update({
+                date: fd.get("d"),
+                time: fd.get("t"),
+                activity: fd.get("a"),
+                description: content,
+              });
+            setEditingId(null);
+          } else {
+            await db
+              .collection("case_logs")
+              .add({
+                clientId,
+                date: fd.get("d"),
+                time: fd.get("t"),
+                activity: fd.get("a"),
+                description: content,
+                activityImage: b64,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              });
+          }
+          editorRef.current.innerHTML = "";
+          e.target.reset();
+        };
+
+        const startEditLog = (l) => {
+          setEditingId(l.id);
+          setTab("perkara");
+          setTimeout(() => {
+            const form = document.getElementById("caseForm");
+            if (form) {
+              form.d.value = l.date;
+              form.t.value = l.time;
+              form.a.value = l.activity;
+              editorRef.current.innerHTML = l.description;
+              form.scrollIntoView({ behavior: "smooth" });
+            }
+          }, 100);
+        };
+
+        const handleDocUpload = async (e) => {
+          e.preventDefault();
+          const fd = new FormData(e.target);
+          setUploading(true);
+          setProgress(10);
+          try {
+            let finalUrl = fd.get("url");
+            let fType = fd.get("type");
+            if (uploadType === "file") {
+              const f = e.target.docFile.files[0];
+              if (!f) throw new Error("Pilih berkas!");
+              const storageRef = storage.ref(
+                `docs/${clientId}/${Date.now()}_${f.name}`
+              );
+              const uploadTask = storageRef.put(f);
+              uploadTask.on("state_changed", (snap) =>
+                setProgress((snap.bytesTransferred / snap.totalBytes) * 100)
+              );
+              const snap = await uploadTask;
+              finalUrl = await snap.ref.getDownloadURL();
+              fType = f.name.split(".").pop().toUpperCase();
+            }
+            await db
+              .collection("documents")
+              .add({
+                clientId,
+                title: fd.get("t"),
+                type: fType,
+                url: finalUrl,
+                date: new Date().toISOString().split("T")[0],
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              });
+            e.target.reset();
+            alert("BERHASIL!");
+          } catch (err) {
+            alert(err.message);
+          } finally {
+            setUploading(false);
+            setProgress(0);
+          }
+        };
+
+        const saldo = data.finance.reduce(
+          (acc, c) =>
+            c.type === "Top Up" && c.status !== "Pending"
+              ? acc + c.amount
+              : c.type !== "Top Up"
+              ? acc - c.amount
+              : acc,
+          0
+        );
+        const fmt = (n) =>
+          new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 0,
+          }).format(n);
+
+        return (
+          <div className="space-y-4 fade-in">
+            <div className="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div className="flex-1">
+                <h2 className="text-lg font-bold text-slate-800 uppercase tracking-tight">
+                  {clientName}
+                </h2>
+                <div className="flex items-center gap-2 mt-1">
+                  <span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-[9px] font-bold uppercase border border-indigo-100 italic tracking-tighter">
+                    Perkara Terverifikasi
+                  </span>
+                  {userRole === "client" && myCases.length > 1 && (
+                    <select
+                      onChange={(e) => onSwitch(e.target.value)}
+                      value={clientId}
+                      className="bg-slate-50 border border-slate-200 text-slate-500 text-[9px] font-bold px-2 py-0.5 rounded outline-none cursor-pointer transition"
+                    >
+                      {myCases.map((mc) => (
+                        <option key={mc.id} value={mc.id}>
+                          {mc.caseTitle}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="flex bg-white border border-slate-200 rounded-lg overflow-hidden shadow-sm sticky top-16 z-40">
+              {[
+                { id: "perkara", icon: "📊" },
+                { id: "keuangan", icon: "💰" },
+                { id: "dokumen", icon: "📂" },
+                { id: "diskusi", icon: "💬" },
+              ].map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => setTab(item.id)}
+                  className={`flex-1 btn-tab ${
+                    tab === item.id ? "btn-tab-active" : ""
+                  }`}
+                >
+                  <span
+                    className={
+                      tab === item.id ? "animate-float text-lg" : "text-lg"
+                    }
+                  >
+                    {item.icon}
+                  </span>
+                  {t(`tab_${item.id}`)}
+                </button>
+              ))}
+            </div>
+
+            <div className="bg-white p-3 md:p-6 rounded-2xl shadow-sm border border-slate-200 min-h-[450px]">
+              {/* 1. LAPORAN */}
+              {tab === "perkara" && (
+                <div className="space-y-6">
+                  {userRole === "admin" && (
+                    <form
+                      id="caseForm"
+                      onSubmit={handleCasePost}
+                      className="p-4 bg-slate-50 rounded-lg border border-slate-100 space-y-3 shadow-inner"
+                    >
+                      <div className="flex justify-between items-center mb-1">
+                        <h3 className="text-[10px] font-bold uppercase text-slate-500">
+                          {editingId ? t("edit") : t("act_t")}
+                        </h3>
+                        {editingId && (
+                          <button
+                            onClick={() => {
+                              setEditingId(null);
+                              editorRef.current.innerHTML = "";
+                              document.getElementById("caseForm").reset();
+                            }}
+                            className="text-[10px] font-bold text-red-500 underline uppercase tracking-widest"
+                          >
+                            {t("cancel")}
+                          </button>
+                        )}
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-[9px] font-bold text-slate-400 uppercase ml-1 mb-1 block">
+                            {t("date_input_label")}
+                          </label>
+                          <input
+                            name="d"
+                            type="date"
+                            required
+                            className="input-std font-mono text-[11px]"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[9px] font-bold text-slate-400 uppercase ml-1 mb-1 block">
+                            {t("time_input_label")}
+                          </label>
+                          <input
+                            name="t"
+                            type="time"
+                            required
+                            className="input-std font-mono text-[11px]"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="text-[9px] font-bold text-slate-400 uppercase ml-1 mb-1 block">
+                          {t("act_input_label")}
+                        </label>
+                        <input
+                          name="a"
+                          placeholder={t("act_t")}
+                          required
+                          className="input-std font-semibold text-[11px]"
+                        />
+                      </div>
+
+                      <div className="editor-toolbar">
+                        <button
+                          type="button"
+                          onClick={() => executeCmd("bold")}
+                          className="toolbar-btn"
+                        >
+                          B
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => executeCmd("italic")}
+                          className="toolbar-btn italic"
+                        >
+                          I
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => executeCmd("underline")}
+                          className="toolbar-btn underline"
+                        >
+                          U
+                        </button>
+                        <div className="w-px h-3 bg-slate-300 mx-1"></div>
+                        <button
+                          type="button"
+                          onClick={() => executeCmd("justifyLeft")}
+                          className="toolbar-btn"
+                        >
+                          ⫷
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => executeCmd("justifyCenter")}
+                          className="toolbar-btn"
+                        >
+                          〓
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => executeCmd("justifyFull")}
+                          className="toolbar-btn"
+                        >
+                          ≡
+                        </button>
+                      </div>
+                      <div
+                        ref={editorRef}
+                        contentEditable
+                        className="editor-box"
+                        placeholder="Ketik rincian hasil laporan..."
+                      ></div>
+
+                      {!editingId && (
+                        <div className="space-y-1">
+                          <label className="text-[9px] font-bold text-slate-400 uppercase ml-1 block">
+                            {t("add_photo")}
+                          </label>
+                          <input
+                            name="photo"
+                            type="file"
+                            accept="image/*"
+                            className="w-full text-[9px] file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:bg-slate-200 file:text-slate-600 cursor-pointer"
+                          />
+                        </div>
+                      )}
+                      <button className="w-full bg-slate-900 text-white py-2.5 rounded-lg font-bold uppercase active:scale-95 transition shadow text-[10px] tracking-widest">
+                        {editingId ? t("save") : t("post")}
+                      </button>
+                    </form>
+                  )}
+
+                  <div className="flex justify-between items-center border-b pb-2 px-1">
+                    <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest italic tracking-tighter">
+                      Arsip Laporan SIMER
+                    </h3>
+                    <button
+                      onClick={async () => {
+                        if (data.logs.length === 0) return;
+                        setAiLoading(true);
+                        const res = await callGeminiAI(
+                          `${t("prompt_summary")}\n${data.logs
+                            .map((l) => `- ${l.date}: ${l.activity}`)
+                            .join("\n")}`
+                        );
+                        setAiSummary(res);
+                        setAiLoading(false);
+                      }}
+                      disabled={aiLoading}
+                      className="text-silo-purple text-[9px] font-bold border border-purple-100 px-2 py-1 rounded bg-purple-50 active:scale-95 transition uppercase tracking-widest"
+                    >
+                      {aiLoading ? "..." : t("ai_sum")}
+                    </button>
+                  </div>
+
+                  {aiSummary && (
+                    <div className="bg-indigo-50 border border-indigo-100 p-4 rounded-lg text-[12px] text-slate-600 shadow-inner fade-in italic leading-relaxed">
+                      "{aiSummary}"
+                    </div>
+                  )}
+
+                  <div className="overflow-x-auto rounded-xl border border-slate-100 shadow-sm no-scrollbar skiptranslate">
+                    <table className="w-full table-custom">
+                      <thead>
+                        <tr>
+                          <th className="w-24 md:w-32 text-center text-[9px]">
+                            WAKTU
+                          </th>
+                          <th className="text-[9px]">HASIL DETAIL</th>
+                          {userRole === "admin" && (
+                            <th className="w-20 text-center text-[9px]">
+                              AKSI
+                            </th>
+                          )}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.logs.map((l) => (
+                          <tr
+                            key={l.id}
+                            className="hover:bg-slate-50 transition"
+                          >
+                            <td className="text-center whitespace-nowrap text-[11px]">
+                              <div className="font-bold text-slate-800">
+                                {l.date}
+                              </div>
+                              <div className="text-slate-400 italic">
+                                {l.time} WIB
+                              </div>
+                            </td>
+                            <td>
+                              <span className="bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded text-[8px] font-black uppercase border border-indigo-100 mb-2 inline-block tracking-tighter">
+                                {l.activity}
+                              </span>
+                              <div
+                                className="report-content-cell"
+                                dangerouslySetInnerHTML={{
+                                  __html: l.description,
+                                }}
+                              ></div>
+                              {l.activityImage && (
+                                <div className="mt-3">
+                                  <img
+                                    src={l.activityImage}
+                                    className="rounded-lg border w-32 md:w-48 h-auto cursor-pointer shadow-sm"
+                                    onClick={() => window.open(l.activityImage)}
+                                  />
+                                </div>
+                              )}
+                            </td>
+                            {userRole === "admin" && (
+                              <td className="text-center">
+                                <div className="flex flex-col gap-2">
+                                  <button
+                                    onClick={() => startEditLog(l)}
+                                    className="text-indigo-600 font-bold text-[9px] uppercase border rounded px-1 py-0.5 hover:bg-indigo-50 transition"
+                                  >
+                                    ✏️ {t("edit")}
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      if (confirm("Hapus log?"))
+                                        db.collection("case_logs")
+                                          .doc(l.id)
+                                          .delete();
+                                    }}
+                                    className="text-red-400 font-bold text-[9px] uppercase border rounded px-1 py-0.5 hover:bg-red-50 transition"
+                                  >
+                                    🗑️ {t("delete")}
+                                  </button>
+                                </div>
+                              </td>
+                            )}
+                          </tr>
+                        ))}
+                        {data.logs.length === 0 && (
+                          <tr>
+                            <td
+                              colSpan="3"
+                              className="text-center py-20 text-slate-300 text-[10px] uppercase font-bold italic tracking-widest"
+                            >
+                              Timeline Kosong
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* 2. KEUANGAN */}
+              {tab === "keuangan" && (
+                <div className="space-y-5">
+                  <div className="bg-slate-900 text-white p-5 rounded-xl shadow-lg border-l-4 border-amber-500 flex justify-between items-center relative overflow-hidden">
+                    <div className="relative z-10">
+                      <p className="text-[9px] uppercase text-slate-400 font-bold mb-0.5 tracking-wider">
+                        Saldo Perkara
+                      </p>
+                      <h3 className="text-xl font-bold text-amber-400 font-mono tracking-tighter">
+                        Rp {saldo.toLocaleString("id-ID")}
+                      </h3>
+                    </div>
+                    <div className="opacity-10 text-4xl text-white absolute -right-2 top-1/2 -translate-y-1/2">
+                      💰
+                    </div>
+                  </div>
+                  {userRole === "admin" && (
+                    <form
+                      onSubmit={async (e) => {
+                        e.preventDefault();
+                        const fd = new FormData(e.target);
+                        await db
+                          .collection("finance_logs")
+                          .add({
+                            clientId,
+                            date: fd.get("d"),
+                            type: fd.get("ty"),
+                            category: fd.get("c"),
+                            amount: parseInt(fd.get("a")),
+                            description: fd.get("ds"),
+                            createdAt:
+                              firebase.firestore.FieldValue.serverTimestamp(),
+                          });
+                        e.target.reset();
+                      }}
+                      className="p-4 bg-slate-50 rounded-lg border border-slate-100 space-y-3 text-xs shadow-inner"
+                    >
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <label className="text-[9px] font-bold text-slate-400 uppercase ml-1 mb-1 block">
+                            {t("date_label")}
+                          </label>
+                          <input
+                            name="d"
+                            type="date"
+                            required
+                            className="input-std font-mono text-[11px]"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-[9px] font-bold text-slate-400 uppercase ml-1 mb-1 block">
+                            {t("type_label")}
+                          </label>
+                          <select
+                            name="ty"
+                            className="input-std font-bold text-[11px]"
+                          >
+                            <option value="Pengeluaran">
+                              {t("trans_out")}
+                            </option>
+                            <option value="Top Up">{t("trans_in")}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <select name="c" className="input-std text-[11px]">
+                          <option>Operasional</option>
+                          <option>Transport</option>
+                          <option>Lawyer Fee</option>
+                        </select>
+                        <input
+                          name="a"
+                          type="number"
+                          placeholder="Rp 0"
+                          required
+                          className="input-std font-bold text-[11px] font-mono"
+                        />
+                      </div>
+                      <input
+                        name="ds"
+                        placeholder="Keterangan rincian..."
+                        required
+                        className="input-std text-[11px] font-medium"
+                      />
+                      <button className="w-full bg-slate-900 text-white py-2.5 rounded-lg font-bold uppercase active:scale-95 shadow text-[10px] tracking-widest">
+                        {t("save")}
+                      </button>
+                    </form>
+                  )}
+                  <div className="overflow-x-auto border border-slate-50 rounded-lg shadow-sm no-scrollbar">
+                    <table className="w-full table-custom">
+                      <thead>
+                        <tr>
+                          <th className="text-[9px]">TGL</th>
+                          <th className="text-[9px]">KET</th>
+                          <th className="text-right text-[9px]">RP</th>
+                          {userRole === "admin" && (
+                            <th className="w-20 text-center text-[9px]">
+                              AKSI
+                            </th>
+                          )}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {data.finance.map((l) => (
+                          <tr
+                            key={l.id}
+                            className="hover:bg-slate-50 transition text-[11px]"
+                          >
+                            <td className="font-mono text-[9px]">{l.date}</td>
+                            <td className="skiptranslate">
+                              <div className="font-bold text-[9px] uppercase text-slate-400">
+                                {l.category}
+                              </div>
+                              <div className="text-[10px] italic leading-tight">
+                                "{l.description}"
+                              </div>
+                            </td>
+                            <td
+                              className={`text-right font-bold text-[10px] font-mono ${
+                                l.type === "Top Up"
+                                  ? "text-green-600"
+                                  : "text-red-500"
+                              }`}
+                            >
+                              {l.type === "Top Up" ? "+" : "-"}{" "}
+                              {l.amount.toLocaleString()}
+                            </td>
+                            {userRole === "admin" && (
+                              <td className="text-center">
+                                <div className="flex gap-2 justify-center">
+                                  <button
+                                    onClick={() => {
+                                      const nAmt = prompt(
+                                        "Nominal Baru:",
+                                        l.amount
+                                      );
+                                      const nDesc = prompt(
+                                        "Keterangan Baru:",
+                                        l.description
+                                      );
+                                      if (nAmt && nDesc)
+                                        db.collection("finance_logs")
+                                          .doc(l.id)
+                                          .update({
+                                            amount: parseInt(nAmt),
+                                            description: nDesc,
+                                          });
+                                    }}
+                                    className="text-indigo-600"
+                                  >
+                                    ✏️
+                                  </button>
+                                  <button
+                                    onClick={() => {
+                                      if (confirm("Hapus?"))
+                                        db.collection("finance_logs")
+                                          .doc(l.id)
+                                          .delete();
+                                    }}
+                                    className="text-red-400"
+                                  >
+                                    🗑️
+                                  </button>
+                                </div>
+                              </td>
+                            )}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {/* 3. BERKAS */}
+              {tab === "dokumen" && (
+                <div className="space-y-4">
+                  {userRole === "admin" && (
+                    <form
+                      onSubmit={handleDocUpload}
+                      className="p-4 bg-slate-50 rounded-lg border border-slate-100 space-y-3 text-xs shadow-inner"
+                    >
+                      <div className="flex gap-2 p-1 bg-slate-200 rounded-lg mb-2">
+                        <button
+                          type="button"
+                          onClick={() => setUploadType("file")}
+                          className={`flex-1 py-1 rounded text-[9px] font-black transition ${
+                            uploadType === "file"
+                              ? "bg-white text-silo-purple shadow-sm"
+                              : "text-slate-500"
+                          }`}
+                        >
+                          {t("upload_file")}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setUploadType("link")}
+                          className={`flex-1 py-1 rounded text-[9px] font-black transition ${
+                            uploadType === "link"
+                              ? "bg-white text-silo-purple shadow-sm"
+                              : "text-slate-500"
+                          }`}
+                        >
+                          {t("upload_link")}
+                        </button>
+                      </div>
+                      <input
+                        name="t"
+                        placeholder="Nama Dokumen (Contoh: Salinan Gugatan)"
+                        required
+                        className="input-std font-bold text-[11px]"
+                      />
+                      {uploadType === "file" ? (
+                        <input
+                          name="docFile"
+                          type="file"
+                          required
+                          className="w-full text-[10px] file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:bg-silo-purple file:text-white cursor-pointer"
+                        />
+                      ) : (
+                        <input
+                          name="url"
+                          placeholder="Link URL (Google Drive / Dropbox)"
+                          required
+                          className="input-std font-mono text-[11px]"
+                        />
+                      )}
+                      {uploading && (
+                        <div className="fade-in">
+                          <div className="upload-progress">
+                            <div
+                              className="upload-bar"
+                              style={{ width: `${progress}%` }}
+                            ></div>
+                          </div>
+                          <p className="text-[9px] text-center mt-1 text-slate-400 font-bold uppercase tracking-widest">
+                            {t("uploading")} {Math.round(progress)}%
+                          </p>
+                        </div>
+                      )}
+                      <button
+                        disabled={uploading}
+                        className="w-full bg-slate-900 text-white py-2.5 rounded-lg font-bold uppercase active:scale-95 shadow text-[10px] tracking-widest disabled:opacity-50 transition"
+                      >
+                        {uploading ? "..." : t("save")}
+                      </button>
+                    </form>
+                  )}
+                  <div className="grid grid-cols-1 gap-3">
+                    {data.docs.map((d) => (
+                      <div
+                        key={d.id}
+                        className="flex justify-between items-center border border-slate-100 p-3.5 rounded-xl bg-white hover:bg-slate-50 shadow-sm transition"
+                      >
+                        <div className="flex items-center gap-4">
+                          <div className="bg-indigo-50 text-indigo-700 w-10 h-10 flex items-center justify-center rounded-lg font-black text-[9px] border border-indigo-100 uppercase">
+                            {d.type || "DOC"}
+                          </div>
+                          <div className="font-bold text-xs text-slate-800 uppercase leading-none">
+                            {d.title}
+                          </div>
+                        </div>
+                        <div className="flex gap-2 items-center">
+                          <button
+                            onClick={() => window.open(d.url)}
+                            className="bg-silo-purple text-white px-3 py-1.5 rounded-lg text-[9px] font-bold shadow-sm hover:opacity-90 transition active:scale-95 uppercase tracking-tighter"
+                          >
+                            Buka
+                          </button>
+                          {userRole === "admin" && (
+                            <button
+                              onClick={() =>
+                                db.collection("documents").doc(d.id).delete()
+                              }
+                              className="text-red-300 p-1 hover:text-red-500 transition"
+                            >
+                              🗑️
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 4. DISKUSI */}
+              {tab === "diskusi" && (
+                <div className="flex flex-col h-[500px]">
+                  <div className="flex items-center justify-between border-b pb-3 mb-4 px-1">
+                    <div className="flex flex-col">
+                      <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-none italic tracking-tighter">
+                        Simer Safe-Discussion
+                      </h3>
+                      <p className="text-[8px] font-black text-slate-800 uppercase mt-1 tracking-widest">
+                        {t("office")}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        const phone =
+                          userRole === "admin"
+                            ? clientPhone
+                              ? clientPhone.replace(/\D/g, "")
+                              : ""
+                            : ADMIN_WA_NUMBER;
+                        const finalPhone = phone.startsWith("0")
+                          ? "62" + phone.substring(1)
+                          : phone;
+                        window.open(
+                          `https://wa.me/${finalPhone}?text=${encodeURIComponent(
+                            "Halo, diskusi perkara di SIMER..."
+                          )}`,
+                          "_blank"
+                        );
+                      }}
+                      className="text-[9px] font-black text-green-600 bg-green-50 px-3 py-1.5 rounded-full border border-green-100 uppercase tracking-tighter transition active:scale-95 shadow-sm"
+                    >
+                      {t("wa_sync")}
+                    </button>
+                  </div>
+                  <div className="flex-1 overflow-y-auto space-y-4 pr-1 chat-container no-scrollbar">
+                    {data.notes.map((n) => (
+                      <div
+                        key={n.id}
+                        className={`flex ${
+                          n.sender === userRole
+                            ? "justify-end"
+                            : "justify-start"
+                        }`}
+                      >
+                        <div
+                          className={`p-3 rounded-2xl text-[13px] max-w-[85%] shadow-sm ${
+                            n.sender === userRole
+                              ? "bg-silo-purple text-white rounded-tr-none shadow-purple-100"
+                              : "bg-white border text-slate-600 rounded-tl-none font-medium"
+                          }`}
+                        >
+                          {n.text}
+                          <div className="text-[7px] text-right mt-1 opacity-60 uppercase font-mono">
+                            {n.createdAt
+                              ? new Date(
+                                  n.createdAt.seconds * 1000
+                                ).toLocaleTimeString([], {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })
+                              : ""}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <div ref={chatEnd} />
+                  </div>
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      const msg = e.target.msg.value;
+                      if (msg) {
+                        await db
+                          .collection("notes")
+                          .add({
+                            clientId,
+                            text: msg,
+                            sender: userRole,
+                            createdAt:
+                              firebase.firestore.FieldValue.serverTimestamp(),
+                          });
+                        e.target.msg.value = "";
+                      }
+                    }}
+                    className="flex flex-col gap-2 mt-4"
+                  >
+                    {userRole === "admin" && (
+                      <div className="flex justify-start px-1">
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            const i =
+                              document.getElementById("chatInput").value;
+                            if (!i) return;
+                            setAiLoading(true);
+                            const r = await callGeminiAI(
+                              `Perhalus pesan singkat pengacara ini jadi bahasa hukum profesional Indonesia yang formal: "${i}"`
+                            );
+                            document.getElementById("chatInput").value = r;
+                            setAiLoading(false);
+                          }}
+                          className="text-[8px] bg-indigo-50 text-indigo-700 px-2 py-1 rounded font-bold border border-indigo-100 shadow-sm active:opacity-50 transition tracking-widest uppercase"
+                        >
+                          {aiLoading ? "..." : t("ai_rew")}
+                        </button>
+                      </div>
+                    )}
+                    <div className="flex gap-2">
+                      <input
+                        id="chatInput"
+                        name="msg"
+                        className="input-std flex-1 shadow-inner border-slate-100 text-[13px] font-medium"
+                        placeholder="Tulis pesan diskusi..."
+                        autoComplete="off"
+                      />
+                      <button className="bg-slate-900 text-white w-10 h-10 rounded-lg flex items-center justify-center font-bold shadow active:scale-90 transition">
+                        ➤
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      const root = ReactDOM.createRoot(document.getElementById("root"));
+      root.render(<SimerApp />);
+    </script>
+  </body>
+</html>
